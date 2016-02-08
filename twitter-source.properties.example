@@ -1,0 +1,9 @@
+name=twitter-source
+connector.class=com.github.rollulus.twitterconnect.TwitterSourceConnector
+tasks.max=1
+file=test.txt
+topic=test
+twitter.consumerkey=REDACTED
+twitter.consumersecret=REDACTED
+twitter.token=REDACTED
+twitter.secret=REDACTED
