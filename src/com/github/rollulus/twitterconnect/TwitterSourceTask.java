@@ -1,10 +1,13 @@
 package com.github.rollulus.twitterconnect;
 
+import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.source.SourceRecord;
 import org.apache.kafka.connect.source.SourceTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -76,7 +79,9 @@ public class TwitterSourceTask extends SourceTask {
             return null;
         } else {
             log.info(msg);
-            return null;
+            List<SourceRecord> records = new ArrayList<>();
+            records.add(new SourceRecord(Collections.singletonMap("TODO","TODO"), Collections.singletonMap("TODO2","TODO2"), "topic", Schema.STRING_SCHEMA, msg));
+            return records;
         }
     }
 }
