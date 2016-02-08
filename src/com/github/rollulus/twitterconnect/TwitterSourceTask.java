@@ -1,6 +1,8 @@
 package com.github.rollulus.twitterconnect;
 
 import org.apache.kafka.connect.data.Schema;
+import org.apache.kafka.connect.data.SchemaBuilder;
+import org.apache.kafka.connect.data.Struct;
 import org.apache.kafka.connect.source.SourceRecord;
 import org.apache.kafka.connect.source.SourceTask;
 import org.slf4j.Logger;
@@ -19,6 +21,7 @@ import com.twitter.hbc.core.processor.StringDelimitedProcessor;
 import com.twitter.hbc.httpclient.BasicClient;
 import com.twitter.hbc.httpclient.auth.Authentication;
 import com.twitter.hbc.httpclient.auth.OAuth1;
+import twitter4j.JSONObject;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -73,15 +76,23 @@ public class TwitterSourceTask extends SourceTask {
             return null; // TODO
         }
 
+        Schema s = SchemaBuilder.struct().name("tweet").field("text", Schema.STRING_SCHEMA).build();
+
         String msg = queue.poll(1, TimeUnit.SECONDS);
         if (msg == null) {
             log.info("Did not receive a message in 1 seconds");
             return null;
         } else {
             log.info(msg);
-            List<SourceRecord> records = new ArrayList<>();
-            records.add(new SourceRecord(Collections.singletonMap("TODO","TODO"), Collections.singletonMap("TODO2","TODO2"), "topic", Schema.STRING_SCHEMA, msg));
-            return records;
+            try {
+                JSONObject j = new JSONObject(msg);
+                List<SourceRecord> records = new ArrayList<>();
+                records.add(new SourceRecord(Collections.singletonMap("TODO", "TODO"), Collections.singletonMap("TODO2", "TODO2"), "topic", s, new Struct(s).put("text",j.getString("text"))));
+                return records;
+            }catch (Exception e) {
+                log.info("BAD");
+                return null;
+            }
         }
     }
 }
