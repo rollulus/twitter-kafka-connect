@@ -12,8 +12,9 @@ Development is in progress. Just for illustration purposes, tons of hardcoded co
  - Then start another two terminals with:
 
 ```shell
-$ connect-standalone /etc/kafka/connect-standalone.properties twitter-source.properties  
-$ kafka-console-consumer --zookeeper localhost:2181 --topic topic
+$ connect-standalone connect-standalone.properties twitter-source.properties  
+$ kafka-avro-console-consumer --topic topic --zookeeper localhost:2181
 ```
 ... to watch Twitter streaming events come by as JSON.
+
 
